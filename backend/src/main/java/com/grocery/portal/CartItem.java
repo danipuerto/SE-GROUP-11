@@ -1,5 +1,6 @@
 package com.grocery.portal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ public class CartItem {
     @ManyToOne
     private Product product;
     @ManyToOne
+    @JsonIgnore
     private ShoppingCart shoppingCart;
 
     public ShoppingCart getShoppingCart() {

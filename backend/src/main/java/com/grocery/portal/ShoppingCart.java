@@ -1,4 +1,5 @@
 package com.grocery.portal;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +13,7 @@ public class ShoppingCart {
     @OneToMany(mappedBy = "shoppingCart")
     private List<CartItem> items;
     @OneToOne
+    @JsonIgnore
     private Customer customer;
 
     public LocalDate getCreatedDate() {
