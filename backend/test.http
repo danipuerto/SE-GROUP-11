@@ -1,3 +1,4 @@
+### Register a new customer
 POST http://localhost:8080/register
 Content-Type: application/json
 
@@ -7,4 +8,37 @@ Content-Type: application/json
   "email": "test@example.com",
   "password": "banana123",
   "phone": "5551234"
+}
+
+### Login with CORRECT password (should return the customer)
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "banana123"
+}
+
+### Login with WRONG password (should return empty/null)
+POST http://localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "test@example.com",
+  "password": "wrongpassword"
+}
+
+### Get all products
+GET http://localhost:8080/products
+
+### Add a product
+POST http://localhost:8080/products
+Content-Type: application/json
+
+{
+  "name": "Bananas",
+  "description": "Fresh yellow bananas",
+  "price": 1.29,
+  "image": "banana.jpg",
+  "quantity": 100
 }
