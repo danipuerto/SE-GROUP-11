@@ -1,2 +1,4 @@
 /Users/kadenhernandez/SE-GROUP-11/frontend-javafx/src/main/java/com/grocery/ui/GroceryApplication.java
 /Users/kadenhernandez/SE-GROUP-11/frontend-javafx/src/main/java/com/grocery/ui/GroceryController.java
+/Users/kadenhernandez/SE-GROUP-11/frontend-javafx/src/main/java/com/grocery/ui/components/ProductCard.java
+/Users/kadenhernandez/SE-GROUP-11/frontend-javafx/src/main/java/com/grocery/ui/model/Product.java
