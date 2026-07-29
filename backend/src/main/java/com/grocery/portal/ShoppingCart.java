@@ -1,30 +1,55 @@
 package com.grocery.portal;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+
+
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 public class ShoppingCart {
+
     @Id
     @GeneratedValue
     private int id;
+
     private LocalDate createdDate;
-    @OneToMany(mappedBy = "shoppingCart")
-    private List<CartItem> items;
+
+    @OneToMany(
+        mappedBy = "shoppingCart",
+        cascade = CascadeType.ALL,
+        orphanRemoval = true
+    )
+    private List<CartItem> items = new ArrayList<>();
+
     @OneToOne
     @JsonIgnore
     private Customer customer;
 
-    public LocalDate getCreatedDate() {
-        return createdDate;
+    public ShoppingCart() {
+        this.items = new ArrayList<>();
     }
 
     public int getId() {
         return id;
     }
 
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
+
     public List<CartItem> getItems() {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
+
         return items;
     }
 
@@ -40,11 +65,11 @@ public class ShoppingCart {
         this.createdDate = createdDate;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setItems(List<CartItem> items) {
+        this.items = items != null ? items : new ArrayList<>();
     }
 
-    public void setItems(List<CartItem> items) {
-        this.items = items;
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 }
