@@ -24,52 +24,46 @@ public class ProductCard extends VBox {
                 -fx-border-radius: 12;
                 """);
 
-        // Product Emoji
         Label emojiLabel = new Label(getEmoji(product.getName()));
-        emojiLabel.setStyle("-fx-font-size: 34;");
+        emojiLabel.setStyle("-fx-font-size:34;");
 
-        // Product Name
         Label nameLabel = new Label(product.getName());
         nameLabel.setWrapText(true);
         nameLabel.setStyle("""
-                -fx-font-size: 18;
-                -fx-font-weight: bold;
+                -fx-font-size:18;
+                -fx-font-weight:bold;
                 """);
 
-        // Description
-        Label descriptionLabel = new Label(product.getDescription());
+        Label descriptionLabel =
+                new Label(product.getDescription());
         descriptionLabel.setWrapText(true);
-        descriptionLabel.setStyle("-fx-text-fill: #687068;");
 
-        // Quantity
-        Label quantityLabel = new Label(
-                "In Stock: " + product.getQuantity()
-        );
-        quantityLabel.setStyle("-fx-text-fill: #687068;");
+        Label quantityLabel =
+                new Label("In Stock: " + product.getQuantity());
 
-        // Price
-        Label priceLabel = new Label(
-                "$" + String.format("%.2f", product.getPrice())
-        );
+        Label priceLabel =
+                new Label(String.format("$%.2f", product.getPrice()));
+
         priceLabel.setStyle("""
-                -fx-font-size: 16;
-                -fx-font-weight: bold;
-                -fx-text-fill: #245c3b;
+                -fx-font-size:16;
+                -fx-font-weight:bold;
+                -fx-text-fill:#245c3b;
                 """);
 
-        // Add Button
         Button addButton = new Button("Add to Cart");
         addButton.setMaxWidth(Double.MAX_VALUE);
 
         addButton.setStyle("""
-                -fx-background-color: #245c3b;
-                -fx-text-fill: white;
-                -fx-font-weight: bold;
-                -fx-background-radius: 7;
-                -fx-padding: 9;
+                -fx-background-color:#245c3b;
+                -fx-text-fill:white;
+                -fx-font-weight:bold;
+                -fx-background-radius:7;
+                -fx-padding:9;
                 """);
 
-        addButton.setOnAction(e -> {
+        addButton.setOnAction(event -> {
+
+            addButton.setDisable(true);
 
             try {
 
@@ -77,9 +71,9 @@ public class ProductCard extends VBox {
 
                 addButton.setText("✓ Added");
 
-            } catch (Exception ex) {
+            } catch (Exception e) {
 
-                ex.printStackTrace();
+                e.printStackTrace();
 
                 addButton.setText("Error");
 
@@ -105,8 +99,8 @@ public class ProductCard extends VBox {
         if (name.contains("milk")) return "🥛";
         if (name.contains("egg")) return "🥚";
         if (name.contains("bread")) return "🍞";
-        if (name.contains("chicken")) return "🍗";
         if (name.contains("apple")) return "🍎";
+        if (name.contains("chicken")) return "🍗";
         if (name.contains("rice")) return "🍚";
         if (name.contains("coffee")) return "☕";
 
