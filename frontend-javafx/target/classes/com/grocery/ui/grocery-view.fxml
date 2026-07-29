@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -15,13 +16,13 @@
             fx:controller="com.grocery.ui.GroceryController"
             prefWidth="1100"
             prefHeight="720"
-            style="-fx-background-color: #f4f6f4;">
+            style="-fx-background-color: #fbf3e7; -fx-base: #ececec; -fx-text-fill: #2b2b2b;">
 
     <top>
         <HBox alignment="CENTER_LEFT"
               spacing="18"
               style="-fx-background-color: white;
-                     -fx-border-color: transparent transparent #dddddd transparent;">
+                     -fx-border-color: transparent transparent #f0d9c0 transparent;">
 
             <padding>
                 <Insets top="18"
@@ -31,13 +32,13 @@
             </padding>
 
             <VBox spacing="2">
-                <Label text="Fresh Market"
+                <Label text="Best Groceries in Town"
                        style="-fx-font-size: 26px;
                               -fx-font-weight: bold;
-                              -fx-text-fill: #245c3b;"/>
+                              -fx-text-fill: #c1571c;"/>
 
                 <Label text="Online Grocery Store"
-                       style="-fx-text-fill: #687068;"/>
+                       style="-fx-text-fill: #8a7259;"/>
             </VBox>
 
             <Region HBox.hgrow="ALWAYS"/>
@@ -52,19 +53,41 @@
             <Button
                     text="Refresh"
                     onAction="#refreshProducts"
-                    style="-fx-background-color: #e8eee9;
-                           -fx-text-fill: #245c3b;
+                    style="-fx-background-color: #fbe4cf;
+                           -fx-text-fill: #c1571c;
                            -fx-font-weight: bold;
                            -fx-padding: 10 16;
                            -fx-background-radius: 8;"/>
 
             <Button
+                    fx:id="adminButton"
+                    text="Admin Panel"
+                    onAction="#openAdminPanel"
+                    managed="false"
+                    visible="false"
+                    style="-fx-background-color: #2f7a3a;
+                           -fx-text-fill: white;
+                           -fx-font-weight: bold;
+                           -fx-padding: 10 16;
+                           -fx-background-radius: 8;"/>
+
+            <Button
+                    fx:id="viewCartButton"
                     text="View Cart"
                     onAction="#openCart"
-                    style="-fx-background-color: #245c3b;
+                    style="-fx-background-color: #d9662b;
                            -fx-text-fill: white;
                            -fx-font-weight: bold;
                            -fx-padding: 10 18;
+                           -fx-background-radius: 8;"/>
+
+            <Button
+                    text="Logout"
+                    onAction="#logout"
+                    style="-fx-background-color: #fbe4cf;
+                           -fx-text-fill: #c1571c;
+                           -fx-font-weight: bold;
+                           -fx-padding: 10 16;
                            -fx-background-radius: 8;"/>
         </HBox>
     </top>
@@ -80,12 +103,12 @@
             </padding>
 
             <VBox spacing="8"
-                  style="-fx-background-color: #245c3b;
+                  style="-fx-background-color: #d9662b;
                          -fx-background-radius: 18;
                          -fx-padding: 35;">
 
                 <Label
-                        text="Fresh groceries made simple."
+                        text="Fresh groceries, down at the corner."
                         style="-fx-font-size: 34px;
                                -fx-font-weight: bold;
                                -fx-text-fill: white;"/>
@@ -96,10 +119,21 @@
                                -fx-text-fill: white;"/>
             </VBox>
 
-            <Label
-                    text="Available Products"
-                    style="-fx-font-size: 27px;
-                           -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <Label
+                        text="Available Products"
+                        style="-fx-font-size: 27px;
+                               -fx-font-weight: bold;"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Label text="Category:" style="-fx-text-fill: #8a7259;"/>
+
+                <ComboBox
+                        fx:id="categoryFilter"
+                        onAction="#filterProducts"
+                        prefWidth="160"/>
+            </HBox>
 
             <ScrollPane
                     fitToWidth="true"
@@ -121,7 +155,7 @@
             <Label
                     fx:id="statusLabel"
                     text="Loading..."
-                    style="-fx-text-fill: #687068;"/>
+                    style="-fx-text-fill: #8a7259;"/>
 
         </VBox>
     </center>

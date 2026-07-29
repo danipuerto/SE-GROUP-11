@@ -1,5 +1,6 @@
 package com.grocery.portal;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,7 +13,10 @@ public class DiscountCode {
 
     private String code;
     private String discountType;
+
+    @Column(name = "discount_value")
     private BigDecimal value;
+
     private boolean active;
 
     public int getId() {

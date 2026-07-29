@@ -21,6 +21,15 @@ public class OrderController {
         return orderService.checkout(customerId, discountCode, deliveryOption);
     }
 
+    // Prices the cart without placing an order, so the UI can show the final
+    // total for a discount code before the customer commits to checking out.
+    @GetMapping("/checkout/{customerId}/preview")
+    public Order previewCheckout(@PathVariable int customerId,
+                                 @RequestParam(required = false) String discountCode,
+                                 @RequestParam(defaultValue = "STANDARD") DeliveryOption deliveryOption) {
+        return orderService.previewCheckout(customerId, discountCode, deliveryOption);
+    }
+
     @GetMapping("/orders/{customerId}")
     public List<Order> orderHistory(@PathVariable int customerId) {
         return orderRepository.findByCustomerId(customerId);
