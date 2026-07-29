@@ -1,7 +1,7 @@
 package com.grocery.portal;
 
 import jakarta.persistence.*;
-import main.java.com.grocery.portal.OrderStatus;
+import com.grocery.portal.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -22,7 +22,7 @@ public class Order {
     private BigDecimal total;
 
     @Enumerated
-    private main.java.com.grocery.portal.OrderStatus status = OrderStatus.PLACED;
+    private com.grocery.portal.OrderStatus status = OrderStatus.PLACED;
 
     @ManyToOne
     private Customer customer;

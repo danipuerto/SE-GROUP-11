@@ -1,4 +1,4 @@
-package main.java.com.grocery.portal;
+package  com.grocery.portal;
 
 public enum OrderStatus {
     PLACED,

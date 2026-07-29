@@ -58,4 +58,7 @@ public class DiscountCode {
     public void setActive(boolean active) {
         this.active = active;
     }
+    public BigDecimal getPercentage() {
+        return value;
+    }
 }

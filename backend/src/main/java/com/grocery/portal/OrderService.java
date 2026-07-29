@@ -48,7 +48,7 @@ public class OrderService {
         BigDecimal tax = discountedSubtotal.multiply(taxRate);
 
         // Delivery fee from the chosen option
-        BigDecimal deliveryFee = deliveryOption.getFee();
+        BigDecimal deliveryFee = deliveryOption.getDeliveryFee();
 
         // Total
         BigDecimal total = discountedSubtotal.add(tax).add(deliveryFee);
@@ -62,7 +62,7 @@ public class OrderService {
         order.setTax(tax);
         order.setDeliveryFee(deliveryFee);
         order.setTotal(total);
-        order.setStatus("PLACED");
+        order.setStatus(OrderStatus.PLACED);
 
         // Copy cart items into order items (snapshot price at purchase)
         for (CartItem cartItem : cart.getItems()) {

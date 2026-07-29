@@ -1,4 +1,4 @@
-### 1. Register customer
+### 1. Register customer 1 (run first after every restart)
 POST http://localhost:8080/register
 Content-Type: application/json
 
@@ -10,26 +10,47 @@ Content-Type: application/json
   "phone": "5551234"
 }
 
-### 2. Add Bananas (id 1)
+### 2. Add product 1 (Bananas)
 POST http://localhost:8080/products
 Content-Type: application/json
 
-{ "name": "Bananas", "description": "Fresh yellow bananas", "price": 1.29, "image": "banana.jpg", "quantity": 100 }
+{
+  "name": "Bananas",
+  "description": "Fresh yellow bananas",
+  "price": 1.29,
+  "image": "banana.jpg",
+  "quantity": 100
+}
 
-### 3. Add Milk (id 2)
+### 3. Add product 2 (Milk)
 POST http://localhost:8080/products
 Content-Type: application/json
 
-{ "name": "Milk", "description": "Whole milk 1 gallon", "price": 3.49, "image": "milk.jpg", "quantity": 50 }
+{
+  "name": "Milk",
+  "description": "Whole milk 1 gallon",
+  "price": 3.49,
+  "image": "milk.jpg",
+  "quantity": 50
+}
 
-### 4. Add 2 Bananas to cart
-POST http://localhost:8080/cart/1/add/1?quantity=2
+### 4. View cart (empty at first)
+GET http://localhost:8080/cart/1
 
-### 5. Add 1 Milk to cart
-POST http://localhost:8080/cart/1/add/2
+### 5. Add product 1 to cart
+POST http://localhost:8080/cart/1/add/1
 
-### 6. Checkout (STANDARD delivery, no discount)
-POST http://localhost:8080/checkout/1
+### 6. Add product 1 AGAIN (option B - quantity should bump to 2)
+POST http://localhost:8080/cart/1/add/1
 
-### 7. View order history
-GET http://localhost:8080/orders/1
+### 7. Add product 2, quantity 3
+POST http://localhost:8080/cart/1/add/2?quantity=3
+
+### 8. View cart (expect: product 1 qty 2, product 2 qty 3)
+GET http://localhost:8080/cart/1
+
+### 9. Remove product 1 from cart
+DELETE http://localhost:8080/cart/1/remove/1
+
+### 10. View cart (expect: only product 2 left)
+GET http://localhost:8080/cart/1
