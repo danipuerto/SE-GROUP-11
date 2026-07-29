@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.grocery.ui.GroceryController"
+            prefWidth="1100"
+            prefHeight="720"
+            style="-fx-background-color: #f4f6f4;">
+
+    <top>
+        <HBox alignment="CENTER_LEFT"
+              spacing="18"
+              style="-fx-background-color: white;
+                     -fx-border-color: transparent transparent #dddddd transparent;">
+
+            <padding>
+                <Insets top="18" right="25" bottom="18" left="25"/>
+            </padding>
+
+            <VBox spacing="2">
+                <Label text="Fresh Market"
+                       style="-fx-font-size: 26px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: #245c3b;"/>
+
+                <Label text="Online Grocery Store"
+                       style="-fx-text-fill: #687068;"/>
+            </VBox>
+
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <TextField promptText="Search groceries..."
+                       prefWidth="260"
+                       style="-fx-background-radius: 8;
+                              -fx-padding: 10;"/>
+
+            <Button text="Refresh"
+                    onAction="#refreshProducts"
+                    style="-fx-background-color: #e8eee9;
+                           -fx-text-fill: #245c3b;
+                           -fx-font-weight: bold;
+                           -fx-padding: 10 16;
+                           -fx-background-radius: 8;"/>
+
+            <Button text="View Cart"
+                    onAction="#openCart"
+                    style="-fx-background-color: #245c3b;
+                           -fx-text-fill: white;
+                           -fx-font-weight: bold;
+                           -fx-padding: 10 18;
+                           -fx-background-radius: 8;"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="20">
+
+            <padding>
+                <Insets top="30" right="30" bottom="30" left="30"/>
+            </padding>
+
+            <VBox spacing="8"
+                  style="-fx-background-color: #245c3b;
+                         -fx-background-radius: 18;
+                         -fx-padding: 35;">
+
+                <Label text="Fresh groceries made simple."
+                       style="-fx-font-size: 34px;
+                              -fx-font-weight: bold;
+                              -fx-text-fill: white;"/>
+
+                <Label text="Browse products, add items to your cart, and check out."
+                       style="-fx-font-size: 16px;
+                              -fx-text-fill: white;"/>
+            </VBox>
+
+            <Label text="Available Products"
+                   style="-fx-font-size: 27px;
+                          -fx-font-weight: bold;"/>
+
+            <ScrollPane fitToWidth="true"
+                        VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent;
+                               -fx-background: transparent;">
+
+                <content>
+                    <TilePane fx:id="productContainer"
+                              prefColumns="3"
+                              hgap="20"
+                              vgap="20"
+                              style="-fx-padding: 5;"/>
+                </content>
+            </ScrollPane>
+
+            <Label fx:id="statusLabel"
+                   text="Loading..."
+                   style="-fx-text-fill: #687068;"/>
+        </VBox>
+    </center>
+
+</BorderPane>
