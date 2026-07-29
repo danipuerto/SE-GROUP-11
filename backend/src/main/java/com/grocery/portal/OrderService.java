@@ -37,7 +37,7 @@ public class OrderService {
         if (discountCodeInput != null && !discountCodeInput.isEmpty()) {
             DiscountCode code = discountCodeRepository.findByCode(discountCodeInput);
             if (code != null && code.isActive()) {
-                discountAmount = subtotal.multiply(code.getPercentage());
+                discountAmount = subtotal.multiply(code.getValue());
             }
         }
 
