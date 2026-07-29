@@ -1,35 +1,35 @@
 package com.grocery.ui.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.grocery.ui.model.Product;
-
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.List;
 
-public class ProductService {
+public class CartService {
 
-    private static final String PRODUCTS_URL =
-            "http://localhost:8080/products";
+    private static final int CUSTOMER_ID = 1;
+    private static final String BASE_URL = "http://localhost:8080";
 
     private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
 
-    public ProductService() {
+    public CartService() {
         this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper();
     }
 
-    public List<Product> getProducts()
+    public void addToCart(int productId)
             throws IOException, InterruptedException {
 
+        String url = BASE_URL
+                + "/cart/"
+                + CUSTOMER_ID
+                + "/add/"
+                + productId
+                + "?quantity=1";
+
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(PRODUCTS_URL))
-                .GET()
+                .uri(URI.create(url))
+                .POST(HttpRequest.BodyPublishers.noBody())
                 .build();
 
         HttpResponse<String> response = httpClient.send(
@@ -46,11 +46,5 @@ public class ProductService {
                             + response.body()
             );
         }
-
-        return objectMapper.readValue(
-                response.body(),
-                new TypeReference<List<Product>>() {
-                }
-        );
     }
 }
