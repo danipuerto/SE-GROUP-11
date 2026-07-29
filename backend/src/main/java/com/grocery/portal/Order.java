@@ -1,6 +1,7 @@
 package com.grocery.portal;
 
 import jakarta.persistence.*;
+import main.java.com.grocery.portal.OrderStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -19,7 +20,10 @@ public class Order {
     private BigDecimal discount;
     private BigDecimal deliveryFee;
     private BigDecimal total;
-    private String status;
+
+    @Enumerated
+    private main.java.com.grocery.portal.OrderStatus status = OrderStatus.PLACED;
+
     @ManyToOne
     private Customer customer;
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
@@ -52,7 +56,7 @@ public class Order {
         return total;
     }
 
-    public String getStatus() {
+    public OrderStatus getStatus() {
         return status;
     }
 
@@ -92,7 +96,7 @@ public class Order {
         this.total = total;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(OrderStatus status) {
         this.status = status;
     }
 
@@ -102,5 +106,13 @@ public class Order {
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public void updateStatus(OrderStatus newStatus) {
+        if (status.canTransitionTo(newStatus)) {
+            status = newStatus;
+        } else {
+            throw new IllegalStateException("Can't transition from " + status + " to " + newStatus);
+        }
     }
 }

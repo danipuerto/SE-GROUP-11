@@ -11,7 +11,8 @@ public class DiscountCode {
     private int id;
 
     private String code;
-    private BigDecimal percentage;
+    private String discountType;
+    private BigDecimal value;
     private boolean active;
 
     public int getId() {
@@ -22,12 +23,24 @@ public class DiscountCode {
         return code;
     }
 
-    public boolean isActive() {
-        return active;
+    public String getDiscountType() {
+        return discountType;
     }
 
-    public BigDecimal getPercentage() {
-        return percentage;
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setDiscountType(String discountType) {
+        this.discountType = discountType;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setId(int id) {
@@ -39,7 +52,7 @@ public class DiscountCode {
     }
 
     public void setPercentage(BigDecimal percentage) {
-        this.percentage = percentage;
+        this.value = percentage;
     }
 
     public void setActive(boolean active) {

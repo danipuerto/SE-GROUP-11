@@ -1,5 +1,6 @@
 package com.grocery.portal;
 //id and generated values imported but not placed
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -11,7 +12,10 @@ public class Product {
     @Id
     @GeneratedValue
     private int id;
+
+    @Column(nullable = false)
     private String name;
+
     private String description;
     private BigDecimal price;
     private String image;

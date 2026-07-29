@@ -13,7 +13,7 @@ public enum DeliveryOption {
         this.fee = fee;
     }
 
-    public BigDecimal getFee() {
+    public BigDecimal getDeliveryFee() {
         return fee;
     }
 }
