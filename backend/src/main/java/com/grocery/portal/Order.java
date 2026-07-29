@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,8 +23,7 @@ public class Order {
     @ManyToOne
     private Customer customer;
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL)
-    private List<OrderItem> items;
-
+    private List<OrderItem> items = new ArrayList<>();
     public int getId() {
         return id;
     }
