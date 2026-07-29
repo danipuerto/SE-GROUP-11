@@ -24,7 +24,10 @@
                      -fx-border-color: transparent transparent #dddddd transparent;">
 
             <padding>
-                <Insets top="18" right="25" bottom="18" left="25"/>
+                <Insets top="18"
+                        right="25"
+                        bottom="18"
+                        left="25"/>
             </padding>
 
             <VBox spacing="2">
@@ -39,12 +42,15 @@
 
             <Region HBox.hgrow="ALWAYS"/>
 
-            <TextField promptText="Search groceries..."
-                       prefWidth="260"
-                       style="-fx-background-radius: 8;
-                              -fx-padding: 10;"/>
+            <TextField
+                    fx:id="searchField"
+                    promptText="Search groceries..."
+                    prefWidth="260"
+                    style="-fx-background-radius: 8;
+                           -fx-padding: 10;"/>
 
-            <Button text="Refresh"
+            <Button
+                    text="Refresh"
                     onAction="#refreshProducts"
                     style="-fx-background-color: #e8eee9;
                            -fx-text-fill: #245c3b;
@@ -52,7 +58,8 @@
                            -fx-padding: 10 16;
                            -fx-background-radius: 8;"/>
 
-            <Button text="View Cart"
+            <Button
+                    text="View Cart"
                     onAction="#openCart"
                     style="-fx-background-color: #245c3b;
                            -fx-text-fill: white;
@@ -66,7 +73,10 @@
         <VBox spacing="20">
 
             <padding>
-                <Insets top="30" right="30" bottom="30" left="30"/>
+                <Insets top="30"
+                        right="30"
+                        bottom="30"
+                        left="30"/>
             </padding>
 
             <VBox spacing="8"
@@ -74,37 +84,45 @@
                          -fx-background-radius: 18;
                          -fx-padding: 35;">
 
-                <Label text="Fresh groceries made simple."
-                       style="-fx-font-size: 34px;
-                              -fx-font-weight: bold;
-                              -fx-text-fill: white;"/>
+                <Label
+                        text="Fresh groceries made simple."
+                        style="-fx-font-size: 34px;
+                               -fx-font-weight: bold;
+                               -fx-text-fill: white;"/>
 
-                <Label text="Browse products, add items to your cart, and check out."
-                       style="-fx-font-size: 16px;
-                              -fx-text-fill: white;"/>
+                <Label
+                        text="Browse products, add items to your cart, and check out."
+                        style="-fx-font-size: 16px;
+                               -fx-text-fill: white;"/>
             </VBox>
 
-            <Label text="Available Products"
-                   style="-fx-font-size: 27px;
-                          -fx-font-weight: bold;"/>
+            <Label
+                    text="Available Products"
+                    style="-fx-font-size: 27px;
+                           -fx-font-weight: bold;"/>
 
-            <ScrollPane fitToWidth="true"
-                        VBox.vgrow="ALWAYS"
-                        style="-fx-background-color: transparent;
-                               -fx-background: transparent;">
+            <ScrollPane
+                    fitToWidth="true"
+                    VBox.vgrow="ALWAYS"
+                    style="-fx-background-color: transparent;
+                           -fx-background: transparent;">
 
                 <content>
-                    <TilePane fx:id="productContainer"
-                              prefColumns="3"
-                              hgap="20"
-                              vgap="20"
-                              style="-fx-padding: 5;"/>
+                    <TilePane
+                            fx:id="productContainer"
+                            prefColumns="3"
+                            hgap="20"
+                            vgap="20"
+                            style="-fx-padding: 5;"/>
                 </content>
+
             </ScrollPane>
 
-            <Label fx:id="statusLabel"
-                   text="Loading..."
-                   style="-fx-text-fill: #687068;"/>
+            <Label
+                    fx:id="statusLabel"
+                    text="Loading..."
+                    style="-fx-text-fill: #687068;"/>
+
         </VBox>
     </center>
 

@@ -1,4 +1,9 @@
 com/grocery/ui/GroceryApplication.class
+com/grocery/ui/model/CartItem.class
+com/grocery/ui/service/ProductService$1.class
+com/grocery/ui/service/CartService.class
 com/grocery/ui/GroceryController.class
 com/grocery/ui/components/ProductCard.class
 com/grocery/ui/model/Product.class
+com/grocery/ui/service/CartService$1.class
+com/grocery/ui/service/ProductService.class
