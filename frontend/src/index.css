@@ -1,0 +1,36 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #222222;
+  background-color: #ae7d73;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background-color: #d4af84;
+}
+
+body {
+    background-image: url("./assets/D.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+a {
+  color: #64122c;
+  font-family: "Playfair Display", serif;
+}
+
+h1,
+h2,
+h3 {
+  color: #46182d;
+  font-family: "Playfair Display", serif;
+}
