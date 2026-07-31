@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -30,6 +31,8 @@ import java.util.List;
 
 public class GroceryController {
 
+    private static final double TAX_RATE = 0.0825;
+
     @FXML
     private TilePane productContainer;
 
@@ -39,40 +42,31 @@ public class GroceryController {
     @FXML
     private TextField searchField;
 
-    private final ProductService productService =
-            new ProductService();
+    private final ProductService productService = new ProductService();
 
-    private final CartService cartService =
-            new CartService();
+    private final CartService cartService = new CartService();
 
-    private List<Product> allProducts =
-            new ArrayList<>();
+    private List<Product> allProducts = new ArrayList<>();
 
     @FXML
     public void initialize() {
+        loadProducts();
 
         searchField.textProperty().addListener(
-                (observable, oldValue, newValue) ->
-                        filterProducts()
+                (observable, oldValue, newValue) -> filterProducts()
         );
-
-        loadProducts();
     }
 
     private void loadProducts() {
-
         statusLabel.setText("Loading products...");
         productContainer.getChildren().clear();
 
         Thread loadingThread = new Thread(() -> {
-
             try {
-
                 List<Product> products =
                         productService.getProducts();
 
                 Platform.runLater(() -> {
-
                     allProducts =
                             new ArrayList<>(products);
 
@@ -85,7 +79,6 @@ public class GroceryController {
                 });
 
             } catch (Exception exception) {
-
                 exception.printStackTrace();
 
                 Platform.runLater(() ->
@@ -104,18 +97,22 @@ public class GroceryController {
     private void displayProducts(
             List<Product> products
     ) {
-
         productContainer.getChildren().clear();
 
         for (Product product : products) {
+            ProductCard productCard =
+                    new ProductCard(product);
 
             productContainer
                     .getChildren()
-                    .add(new ProductCard(product));
+                    .add(productCard);
         }
     }
 
     private void filterProducts() {
+        if (searchField == null) {
+            return;
+        }
 
         String searchText =
                 searchField.getText();
@@ -133,18 +130,17 @@ public class GroceryController {
                 new ArrayList<>();
 
         for (Product product : allProducts) {
-
             String productName =
                     product.getName() == null
                             ? ""
                             : product.getName()
-                                    .toLowerCase();
+                            .toLowerCase();
 
             String productDescription =
                     product.getDescription() == null
                             ? ""
                             : product.getDescription()
-                                    .toLowerCase();
+                            .toLowerCase();
 
             if (search.isBlank()
                     || productName.contains(search)
@@ -157,14 +153,12 @@ public class GroceryController {
         displayProducts(filteredProducts);
 
         if (search.isBlank()) {
-
             statusLabel.setText(
                     allProducts.size()
                             + " products loaded."
             );
 
         } else if (filteredProducts.isEmpty()) {
-
             statusLabel.setText(
                     "No products found for \""
                             + searchText.trim()
@@ -172,7 +166,6 @@ public class GroceryController {
             );
 
         } else {
-
             statusLabel.setText(
                     filteredProducts.size()
                             + " product(s) found."
@@ -182,27 +175,25 @@ public class GroceryController {
 
     @FXML
     private void refreshProducts() {
+        if (searchField != null) {
+            searchField.clear();
+        }
 
-        searchField.clear();
         loadProducts();
     }
 
     @FXML
     private void openCart() {
-
         statusLabel.setText(
                 "Loading shopping cart..."
         );
 
         Thread cartThread = new Thread(() -> {
-
             try {
-
                 List<CartItem> cartItems =
                         cartService.getCartItems();
 
                 Platform.runLater(() -> {
-
                     showCartWindow(cartItems);
 
                     statusLabel.setText(
@@ -212,7 +203,6 @@ public class GroceryController {
                 });
 
             } catch (Exception exception) {
-
                 exception.printStackTrace();
 
                 Platform.runLater(() ->
@@ -231,10 +221,11 @@ public class GroceryController {
     private void showCartWindow(
             List<CartItem> cartItems
     ) {
-
         Stage cartStage = new Stage();
 
-        cartStage.setTitle("Shopping Cart");
+        cartStage.setTitle(
+                "Shopping Cart"
+        );
 
         cartStage.initModality(
                 Modality.APPLICATION_MODAL
@@ -265,30 +256,34 @@ public class GroceryController {
                         + "-fx-text-fill: #245c3b;"
         );
 
+        Button checkoutButton =
+                new Button("Checkout");
+
+        checkoutButton.setStyle(
+                "-fx-background-color: #2e8b57;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 10 16;"
+                        + "-fx-background-radius: 8;"
+        );
+
+        checkoutButton.setDisable(
+                cartItems.isEmpty()
+        );
+
         if (cartItems.isEmpty()) {
-
-            Label emptyLabel =
-                    new Label(
-                            "Your shopping cart is empty."
-                    );
-
-            emptyLabel.setStyle(
-                    "-fx-font-size: 16px;"
+            showEmptyCartMessage(
+                    cartItemsBox
             );
 
-            cartItemsBox
-                    .getChildren()
-                    .add(emptyLabel);
-
         } else {
-
             for (CartItem cartItem : cartItems) {
-
                 HBox itemRow =
                         createCartItemRow(
                                 cartItem,
                                 cartItemsBox,
-                                totalLabel
+                                totalLabel,
+                                checkoutButton
                         );
 
                 cartItemsBox
@@ -327,8 +322,17 @@ public class GroceryController {
                 event -> cartStage.close()
         );
 
+        checkoutButton.setOnAction(
+                event -> showCheckoutWindow(
+                        cartStage,
+                        cartItemsBox,
+                        totalLabel,
+                        checkoutButton
+                )
+        );
+
         HBox bottomBar =
-                new HBox(20);
+                new HBox(15);
 
         bottomBar.setAlignment(
                 Pos.CENTER_RIGHT
@@ -340,6 +344,7 @@ public class GroceryController {
 
         bottomBar.getChildren().addAll(
                 totalLabel,
+                checkoutButton,
                 closeButton
         );
 
@@ -364,7 +369,11 @@ public class GroceryController {
         );
 
         Scene scene =
-                new Scene(root, 600, 500);
+                new Scene(
+                        root,
+                        650,
+                        500
+                );
 
         cartStage.setScene(scene);
         cartStage.showAndWait();
@@ -373,9 +382,9 @@ public class GroceryController {
     private HBox createCartItemRow(
             CartItem cartItem,
             VBox cartItemsBox,
-            Label totalLabel
+            Label totalLabel,
+            Button checkoutButton
     ) {
-
         Product product =
                 cartItem.getProduct();
 
@@ -438,29 +447,29 @@ public class GroceryController {
         );
 
         removeButton.setOnAction(event -> {
-
             if (product == null) {
                 return;
             }
 
             removeButton.setDisable(true);
-            removeButton.setText("Removing...");
+
+            removeButton.setText(
+                    "Removing..."
+            );
 
             Thread removeThread =
                     new Thread(() -> {
-
                         try {
-
                             cartService.removeItem(
                                     product.getId()
                             );
 
                             Platform.runLater(() -> {
-
                                 removeCartRow(
                                         cartItemsBox,
                                         removeButton,
-                                        totalLabel
+                                        totalLabel,
+                                        checkoutButton
                                 );
 
                                 statusLabel.setText(
@@ -470,11 +479,9 @@ public class GroceryController {
                             });
 
                         } catch (Exception exception) {
-
                             exception.printStackTrace();
 
                             Platform.runLater(() -> {
-
                                 removeButton.setDisable(
                                         false
                                 );
@@ -513,7 +520,9 @@ public class GroceryController {
                 new Insets(10)
         );
 
-        itemRow.setUserData(cartItem);
+        itemRow.setUserData(
+                cartItem
+        );
 
         return itemRow;
     }
@@ -521,9 +530,9 @@ public class GroceryController {
     private void removeCartRow(
             VBox cartItemsBox,
             Button removeButton,
-            Label totalLabel
+            Label totalLabel,
+            Button checkoutButton
     ) {
-
         HBox itemRow =
                 (HBox) removeButton.getParent();
 
@@ -533,18 +542,17 @@ public class GroceryController {
                         .indexOf(itemRow);
 
         if (rowIndex >= 0) {
-
             cartItemsBox
                     .getChildren()
                     .remove(itemRow);
 
             if (rowIndex
                     < cartItemsBox
-                            .getChildren()
-                            .size()
+                    .getChildren()
+                    .size()
                     && cartItemsBox
-                            .getChildren()
-                            .get(rowIndex)
+                    .getChildren()
+                    .get(rowIndex)
                     instanceof Separator) {
 
                 cartItemsBox
@@ -554,32 +562,16 @@ public class GroceryController {
         }
 
         boolean hasCartItems =
-                cartItemsBox
-                        .getChildren()
-                        .stream()
-                        .anyMatch(
-                                node ->
-                                        node instanceof HBox
-                        );
+                hasCartItems(cartItemsBox);
 
         if (!hasCartItems) {
-
-            cartItemsBox
-                    .getChildren()
-                    .clear();
-
-            Label emptyLabel =
-                    new Label(
-                            "Your shopping cart is empty."
-                    );
-
-            emptyLabel.setStyle(
-                    "-fx-font-size: 16px;"
+            showEmptyCartMessage(
+                    cartItemsBox
             );
 
-            cartItemsBox
-                    .getChildren()
-                    .add(emptyLabel);
+            checkoutButton.setDisable(
+                    true
+            );
         }
 
         updateTotal(
@@ -588,11 +580,436 @@ public class GroceryController {
         );
     }
 
+    private void showCheckoutWindow(
+            Stage cartStage,
+            VBox cartItemsBox,
+            Label cartTotalLabel,
+            Button checkoutButton
+    ) {
+        List<CartItem> currentCartItems =
+                getCartItemsFromBox(
+                        cartItemsBox
+                );
+
+        if (currentCartItems.isEmpty()) {
+            Alert emptyCartAlert =
+                    new Alert(
+                            Alert.AlertType.WARNING
+                    );
+
+            emptyCartAlert.setTitle(
+                    "Empty Cart"
+            );
+
+            emptyCartAlert.setHeaderText(
+                    "Your shopping cart is empty."
+            );
+
+            emptyCartAlert.setContentText(
+                    "Add at least one item before checking out."
+            );
+
+            emptyCartAlert.showAndWait();
+            return;
+        }
+
+        double subtotal =
+                calculateSubtotal(
+                        currentCartItems
+                );
+
+        double tax =
+                subtotal * TAX_RATE;
+
+        double total =
+                subtotal + tax;
+
+        Stage checkoutStage =
+                new Stage();
+
+        checkoutStage.setTitle(
+                "Checkout"
+        );
+
+        checkoutStage.initOwner(
+                cartStage
+        );
+
+        checkoutStage.initModality(
+                Modality.APPLICATION_MODAL
+        );
+
+        Label checkoutTitle =
+                new Label("Checkout");
+
+        checkoutTitle.setStyle(
+                "-fx-font-size: 26px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-text-fill: #245c3b;"
+        );
+
+        Label orderSummaryTitle =
+                new Label("Order Summary");
+
+        orderSummaryTitle.setStyle(
+                "-fx-font-size: 18px;"
+                        + "-fx-font-weight: bold;"
+        );
+
+        VBox itemSummaryBox =
+                new VBox(8);
+
+        for (CartItem cartItem
+                : currentCartItems) {
+
+            Product product =
+                    cartItem.getProduct();
+
+            String productName =
+                    product == null
+                            ? "Unknown Product"
+                            : product.getName();
+
+            Label itemLabel =
+                    new Label(
+                            productName
+                                    + " × "
+                                    + cartItem.getQuantity()
+                                    + "    "
+                                    + String.format(
+                                    "$%.2f",
+                                    cartItem.getTotalPrice()
+                            )
+                    );
+
+            itemLabel.setStyle(
+                    "-fx-font-size: 14px;"
+            );
+
+            itemSummaryBox
+                    .getChildren()
+                    .add(itemLabel);
+        }
+
+        ScrollPane itemScrollPane =
+                new ScrollPane(itemSummaryBox);
+
+        itemScrollPane.setFitToWidth(true);
+        itemScrollPane.setPrefHeight(150);
+
+        Label subtotalLabel =
+                new Label(
+                        String.format(
+                                "Subtotal: $%.2f",
+                                subtotal
+                        )
+                );
+
+        Label taxLabel =
+                new Label(
+                        String.format(
+                                "Tax (8.25%%): $%.2f",
+                                tax
+                        )
+                );
+
+        Label finalTotalLabel =
+                new Label(
+                        String.format(
+                                "Total: $%.2f",
+                                total
+                        )
+                );
+
+        finalTotalLabel.setStyle(
+                "-fx-font-size: 20px;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-text-fill: #245c3b;"
+        );
+
+        Button cancelButton =
+                new Button("Back to Cart");
+
+        cancelButton.setStyle(
+                "-fx-background-color: #e8eee9;"
+                        + "-fx-text-fill: #245c3b;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 10 16;"
+                        + "-fx-background-radius: 8;"
+        );
+
+        cancelButton.setOnAction(
+                event -> checkoutStage.close()
+        );
+
+        Button placeOrderButton =
+                new Button("Place Order");
+
+        placeOrderButton.setStyle(
+                "-fx-background-color: #245c3b;"
+                        + "-fx-text-fill: white;"
+                        + "-fx-font-weight: bold;"
+                        + "-fx-padding: 10 18;"
+                        + "-fx-background-radius: 8;"
+        );
+
+        placeOrderButton.setOnAction(event -> {
+            placeOrderButton.setDisable(true);
+            cancelButton.setDisable(true);
+
+            placeOrderButton.setText(
+                    "Placing Order..."
+            );
+
+            placeOrder(
+                    currentCartItems,
+                    checkoutStage,
+                    cartStage,
+                    cartItemsBox,
+                    cartTotalLabel,
+                    checkoutButton,
+                    placeOrderButton,
+                    cancelButton
+            );
+        });
+
+        HBox checkoutButtons =
+                new HBox(
+                        12,
+                        cancelButton,
+                        placeOrderButton
+                );
+
+        checkoutButtons.setAlignment(
+                Pos.CENTER_RIGHT
+        );
+
+        VBox checkoutRoot =
+                new VBox(
+                        15,
+                        checkoutTitle,
+                        orderSummaryTitle,
+                        itemScrollPane,
+                        new Separator(),
+                        subtotalLabel,
+                        taxLabel,
+                        finalTotalLabel,
+                        checkoutButtons
+                );
+
+        checkoutRoot.setPadding(
+                new Insets(25)
+        );
+
+        checkoutRoot.setStyle(
+                "-fx-background-color: #f4f6f4;"
+        );
+
+        Scene checkoutScene =
+                new Scene(
+                        checkoutRoot,
+                        450,
+                        500
+                );
+
+        checkoutStage.setScene(
+                checkoutScene
+        );
+
+        checkoutStage.showAndWait();
+    }
+
+    private void placeOrder(
+            List<CartItem> currentCartItems,
+            Stage checkoutStage,
+            Stage cartStage,
+            VBox cartItemsBox,
+            Label cartTotalLabel,
+            Button checkoutButton,
+            Button placeOrderButton,
+            Button cancelButton
+    ) {
+        Thread orderThread =
+                new Thread(() -> {
+                    try {
+                        for (CartItem cartItem
+                                : currentCartItems) {
+
+                            Product product =
+                                    cartItem.getProduct();
+
+                            if (product != null) {
+                                cartService.removeItem(
+                                        product.getId()
+                                );
+                            }
+                        }
+
+                        Platform.runLater(() -> {
+                            cartItemsBox
+                                    .getChildren()
+                                    .clear();
+
+                            showEmptyCartMessage(
+                                    cartItemsBox
+                            );
+
+                            updateTotal(
+                                    cartItemsBox,
+                                    cartTotalLabel
+                            );
+
+                            checkoutButton.setDisable(
+                                    true
+                            );
+
+                            checkoutStage.close();
+                            cartStage.close();
+
+                            statusLabel.setText(
+                                    "Order placed successfully!"
+                            );
+
+                            Alert confirmationAlert =
+                                    new Alert(
+                                            Alert.AlertType.INFORMATION
+                                    );
+
+                            confirmationAlert.setTitle(
+                                    "Order Confirmation"
+                            );
+
+                            confirmationAlert.setHeaderText(
+                                    "Thank you for your purchase!"
+                            );
+
+                            confirmationAlert.setContentText(
+                                    "Your order was placed successfully."
+                            );
+
+                            confirmationAlert.showAndWait();
+                        });
+
+                    } catch (Exception exception) {
+                        exception.printStackTrace();
+
+                        Platform.runLater(() -> {
+                            placeOrderButton.setDisable(
+                                    false
+                            );
+
+                            cancelButton.setDisable(
+                                    false
+                            );
+
+                            placeOrderButton.setText(
+                                    "Place Order"
+                            );
+
+                            statusLabel.setText(
+                                    "Could not place the order."
+                            );
+
+                            Alert errorAlert =
+                                    new Alert(
+                                            Alert.AlertType.ERROR
+                                    );
+
+                            errorAlert.setTitle(
+                                    "Checkout Error"
+                            );
+
+                            errorAlert.setHeaderText(
+                                    "The order could not be completed."
+                            );
+
+                            errorAlert.setContentText(
+                                    "Make sure the backend is running and try again."
+                            );
+
+                            errorAlert.showAndWait();
+                        });
+                    }
+                });
+
+        orderThread.setDaemon(true);
+        orderThread.start();
+    }
+
+    private List<CartItem> getCartItemsFromBox(
+            VBox cartItemsBox
+    ) {
+        List<CartItem> cartItems =
+                new ArrayList<>();
+
+        for (javafx.scene.Node node
+                : cartItemsBox.getChildren()) {
+
+            if (node instanceof HBox itemRow
+                    && itemRow.getUserData()
+                    instanceof CartItem cartItem) {
+
+                cartItems.add(cartItem);
+            }
+        }
+
+        return cartItems;
+    }
+
+    private double calculateSubtotal(
+            List<CartItem> cartItems
+    ) {
+        double subtotal = 0.0;
+
+        for (CartItem cartItem
+                : cartItems) {
+
+            subtotal +=
+                    cartItem.getTotalPrice();
+        }
+
+        return subtotal;
+    }
+
+    private boolean hasCartItems(
+            VBox cartItemsBox
+    ) {
+        return cartItemsBox
+                .getChildren()
+                .stream()
+                .anyMatch(
+                        node ->
+                                node instanceof HBox
+                                        && node.getUserData()
+                                        instanceof CartItem
+                );
+    }
+
+    private void showEmptyCartMessage(
+            VBox cartItemsBox
+    ) {
+        cartItemsBox
+                .getChildren()
+                .clear();
+
+        Label emptyLabel =
+                new Label(
+                        "Your shopping cart is empty."
+                );
+
+        emptyLabel.setStyle(
+                "-fx-font-size: 16px;"
+        );
+
+        cartItemsBox
+                .getChildren()
+                .add(emptyLabel);
+    }
+
     private void updateTotal(
             VBox cartItemsBox,
             Label totalLabel
     ) {
-
         double total = 0.0;
 
         for (javafx.scene.Node node
@@ -609,7 +1026,7 @@ public class GroceryController {
 
         totalLabel.setText(
                 String.format(
-                        "Total: $%.2f",
+                        "Subtotal: $%.2f",
                         total
                 )
         );
